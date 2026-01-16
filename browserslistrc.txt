@@ -1,0 +1,4 @@
+defaults
+not dead
+not ie 11
+maintained node versions
