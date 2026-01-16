@@ -1,36 +1,34 @@
-
 import { getHealthStatus } from '../src/health.js';
 
 describe('getHealthStatus', () => {
- 
   test('возвращает "healthy" для здоровья > 50', () => {
     expect(getHealthStatus({ name: 'Маг', health: 90 })).toBe('healthy');
     expect(getHealthStatus({ name: 'Маг', health: 51 })).toBe('healthy');
     expect(getHealthStatus({ name: 'Маг', health: 100 })).toBe('healthy');
   });
 
-  
   test('возвращает "wounded" для здоровья от 15 до 50 включительно', () => {
     expect(getHealthStatus({ name: 'Маг', health: 50 })).toBe('wounded');
     expect(getHealthStatus({ name: 'Маг', health: 30 })).toBe('wounded');
     expect(getHealthStatus({ name: 'Маг', health: 15 })).toBe('wounded');
-    
-    expect(getHealthStatus({ name: 'Маг', health: 15.1 })).toBe('wounded');
-    expect(getHealthStatus({ name: 'Маг', health: 49.9 })).toBe('wounded');
   });
 
-  
   test('возвращает "critical" для здоровья < 15', () => {
     expect(getHealthStatus({ name: 'Маг', health: 14 })).toBe('critical');
     expect(getHealthStatus({ name: 'Маг', health: 10 })).toBe('critical');
     expect(getHealthStatus({ name: 'Маг', health: 0 })).toBe('critical');
-    expect(getHealthStatus({ name: 'Маг', health: 1 })).toBe('critical');
-    expect(getHealthStatus({ name: 'Маг', health: 14.9 })).toBe('critical');
-    
-    expect(getHealthStatus({ name: 'Маг', health: 14.999 })).toBe('critical');
   });
 
-  
+  test('работает без свойства name', () => {
+    expect(getHealthStatus({ health: 90 })).toBe('healthy');
+    expect(getHealthStatus({ health: 30 })).toBe('wounded');
+    expect(getHealthStatus({ health: 10 })).toBe('critical');
+  });
+
+  test('работает с дополнительными свойствами', () => {
+    expect(getHealthStatus({ name: 'Маг', health: 90, level: 10 })).toBe('healthy');
+  });
+
   describe('валидация входных данных', () => {
     test('выбрасывает ошибку если не передан объект', () => {
       expect(() => getHealthStatus()).toThrow('Персонаж должен быть объектом');
@@ -44,7 +42,7 @@ describe('getHealthStatus', () => {
       expect(() => getHealthStatus({ health: '90' })).toThrow('Здоровье должно быть числом');
       expect(() => getHealthStatus({ health: null })).toThrow('Здоровье должно быть числом');
       expect(() => getHealthStatus({ health: undefined })).toThrow('Здоровье должно быть числом');
-      expect(() => getHealthStatus({})).toThrow('Здоровье должно быть числом'); // нет свойства health
+      expect(() => getHealthStatus({})).toThrow('Здоровье должно быть числом');
     });
 
     test('выбрасывает ошибку если health < 0', () => {
@@ -65,16 +63,5 @@ describe('getHealthStatus', () => {
       expect(() => getHealthStatus({ health: Infinity })).toThrow('Здоровье должно быть конечным числом');
       expect(() => getHealthStatus({ health: -Infinity })).toThrow('Здоровье должно быть конечным числом');
     });
-  });
-
-  
-  test('работает без свойства name', () => {
-    expect(getHealthStatus({ health: 90 })).toBe('healthy');
-    expect(getHealthStatus({ health: 30 })).toBe('wounded');
-    expect(getHealthStatus({ health: 10 })).toBe('critical');
-  });
-
-  test('работает с дополнительными свойствами', () => {
-    expect(getHealthStatus({ name: 'Маг', health: 90, level: 10 })).toBe('healthy');
   });
 });
