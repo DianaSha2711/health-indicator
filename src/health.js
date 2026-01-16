@@ -1,4 +1,4 @@
-export function getHealthStatus(character) {
+function getHealthStatus(character) {
   if (!character || typeof character !== 'object') {
     throw new Error('Персонаж должен быть объектом');
   }
@@ -31,3 +31,4 @@ export function getHealthStatus(character) {
 
   return 'critical';
 }
+export default calculateHealth;
