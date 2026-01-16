@@ -31,4 +31,4 @@ function getHealthStatus(character) {
 
   return 'critical';
 }
-export default calculateHealth;
+export default getHealthStatus;
